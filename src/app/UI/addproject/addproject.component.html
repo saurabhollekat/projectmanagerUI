@@ -1,0 +1,156 @@
+<div class="container">
+  <form #f="ngForm">
+    <table class="table">
+      <tr>
+        <td colspan="2">{{responseMsg}}</td>
+      </tr>
+      <tr>
+         <td>
+          Project:
+        </td>
+        <td>
+          <input type="text" id="prjName" [(ngModel)]="projectObj.ProjectName" name="prjName " #prjName="ngModel" style="width:60%"
+            required />
+          <div style="float:right;width:35%;padding:initial;margin:initial" class="alert alert-danger" *ngIf="prjName.touched && !prjName.valid">Project
+            Name is required</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td>
+          <input type="checkbox" name="chkSetDate" id="chkSetDate" (change)="checkChange();" [(ngModel)]="chkSetDateVal"
+            #chkSetDate="ngModel" />
+          &nbsp;<label for="chkSetDate"> Set Start and End Date</label>
+          &nbsp;<input type="date" [disabled]="!chkSetDateVal" [ngModel]="projectObj.StartDate|date:'yyyy-MM-dd'" (ngModelChange)="projectObj.StartDate=$event; ValidateDate();"
+            id="prjStrtDt" name="prjStrtDt" />
+          &nbsp; &nbsp; &nbsp;<input type="date" [disabled]="!chkSetDateVal" id="prjEndDt" name="prjEndDt" [ngModel]="projectObj.EndDate|date:'yyyy-MM-dd'"
+            (ngModelChange)="projectObj.EndDate=$event;ValidateDate();" />
+
+          <div style="float:right;width:35%;padding:initial;margin:initial;" class="alert alert-danger" *ngIf="!this.dateIsValid">Please
+            correct the dates</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Priority:
+        </td>
+        <td>
+          <span>0 </span>
+          <input type="range" id="prjPriority" name="Priority" [(ngModel)]="projectObj.Priority" style="width:56%" min="0" max="30" />
+          <span>30 </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Manager:
+        </td>
+        <td>
+          <input type="text" name="prjManager" id="prjManager" style="width:50%;"  [(ngModel)]="Manager" />
+          &nbsp;&nbsp;
+          <button type="button" id="btnMngrSrch" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="onSearchClick();" style="border-radius:50%">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td>
+          <div style="width:60%;text-align:right">
+            <button type="button" id="btnAddPrj" class="btn btn-primary" (click)="addProject();" [disabled]="(!f.valid || !this.dateIsValid)">{{buttonText}}</button>
+             &nbsp;&nbsp;
+            <button type="button" id="btnAddPrj" (click)="f.resetForm();"  class="btn btn-secondary">Reset</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <input type="text" id="srchProject" style="width:65%" placeholder="Search..." />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sort By:
+        </td>
+        <td>
+          <button type="button" id="btnSortStrtDt" (click)="SortByStartDate();" class="btn btn-primary">Start Date</button> &nbsp;&nbsp;
+          <button type="button" id="btnSortEndDt" (click)="SortByEndDate();" class="btn btn-primary">End Date</button> &nbsp;&nbsp;
+          <button type="button" id="btnSortPri" (click)="SortByPriority();" class="btn btn-primary">Priority</button> &nbsp;&nbsp;
+          <button type="button" id="btnSortCmp" (click)="SortByCompleted();" class="btn btn-primary">Completed</button> &nbsp;&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div style="width:65%">
+            <ul class="list-group" >
+              <li class="list-group-item" *ngFor="let obj of lstprojects">
+                <div>
+                  <table class="table">
+                    <tr>
+                      <td colspan="2">
+                        Project: <span id="prjName">{{obj.ProjectName}}</span>
+                      </td>
+                      <td>
+                        Priority: <span id="prjPri">{{obj.Priority}}</span>
+                      </td>
+                      <td style="float: right">
+                        <button type="button" style="width:90px;" id="btnprjUpdt" (click)="updateProject(obj);" class="btn btn-primary">Update</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        No of Tasks: <span>{{obj.NoOfTasks}}</span>
+                        <br />
+                        <br />
+                        Start Date:<span>{{obj.StartDate|date:'yyyy-MM-dd'}}</span>
+                      </td>
+                      <td>
+                        Completed:<span>{{obj.CompletedTasks}}</span>
+                        <br />
+                        <br />
+                        End Date:<span>{{obj.EndDate|date:'yyyy-MM-dd'}}</span>
+                      </td>
+                      <td></td>
+                      <td style="float: right">
+                        <button type="button" style="width:90px;" id="btnprjSus" class="btn btn-secondary">Suspend</button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Search Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="height:500px;overflow-y:auto;">
+          <div class="container-fluid">
+            <div class="row">
+              <input type="text" class="form-control" placeholder="Search..." name="txtUsrSrch" id="txtUsrSrch">
+            </div>           
+            <div class="row justify-content-center mt-3" *ngFor="let obj of lstItem">
+              <input class="col-md-3" type="radio" name="rdlstItem" id="rdlstItem" (change)="handleChange(obj);" >
+              <span class="col-md-9" name="lbllstItem" id="lbllstItem">{{obj.FirstName}} {{obj.LastName}}</span>
+            </div>
+          </div>         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary"  data-dismiss="modal" (click)="onSelection();">Select</button>
+        </div>
+      </div>
+    </div>
+  </div>

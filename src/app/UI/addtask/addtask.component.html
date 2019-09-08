@@ -1,0 +1,131 @@
+<div class="container">
+  <form #f="ngForm">
+    <table class="table">
+      <tr>
+        <td colspan="2">
+          {{responseMsg}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Project:
+        </td>
+        <td>
+          <input type="text" name="tskPrj" id="tskPrj" [(ngModel)]="projectName" disabled="disabled" style="width:50%" />
+          &nbsp;&nbsp;
+          <button type="button" id="btnPrjSrch" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+            (click)="onPrjSearchClick();" [disabled]="isUpdate" style="border-radius:50%">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Task:
+        </td>
+        <td>
+          <input type="text" id="tskName" name="tskName" #tskName="ngModel" [(ngModel)]="taskObj.TaskName" style="width:60%"
+            required />
+          <div style="float:right;width:35%;padding:initial;margin:initial" class="alert alert-danger" *ngIf="tskName.touched && !tskName.valid">Task
+            Name is required</div>
+          <br>
+          <input type="checkbox" name="chkParent" id="chkParent" [disabled]="isUpdate" (change)="checkChange();" [(ngModel)]="isPrntTskChckd" />
+          &nbsp;<label for="chkParent">Parent Task</label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Priority:
+        </td>
+        <td>
+          <span>0 </span>
+          <input type="range" id="tskPriority" name="tskPriority" [disabled]="isPrntTskChckd" style="width:56%" min="0"
+            max="30"  [(ngModel)]="taskObj.Priority" />
+          <span>30 </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Parent Task:
+        </td>
+        <td>
+          <input type="text" name="tskParent" disabled="disabled" id="tskParent" style="width:50%" [(ngModel)]="parentTaskName" />
+          &nbsp;&nbsp;
+          <button type="button" id="btnPrntTskSrch" [disabled]="isPrntTskChckd" class="btn btn-primary" data-toggle="modal"
+            data-target="#exampleModal" (click)="onPrntTskSearchClick();" style="border-radius:50%">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Start Date:
+        </td>
+        <td>
+          <div style="width:60%">
+            <input type="date" id="prjStrtDt" name="prjStrtDt" [disabled]="isPrntTskChckd" [ngModel]="taskObj.StartDate|date:'yyyy-MM-dd'"
+              (ngModelChange)="taskObj.StartDate=$event; ValidateDate();" />
+            &nbsp;&nbsp;
+            <div style="width:50%;float:right;">
+              <span>End Date:</span> &nbsp;&nbsp;
+              <input type="date" id="prjEndDt" name="prjEndDt" [disabled]="isPrntTskChckd" [ngModel]="taskObj.EndDate|date:'yyyy-MM-dd'"
+                (ngModelChange)="taskObj.EndDate=$event;ValidateDate();" />
+            </div>            
+          </div> 
+          <div style="float:right;width:35%;padding:initial;margin-top:-30px;margin-bottom:0px;" class="alert alert-danger" *ngIf="!this.dateIsValid">Please
+              correct the dates
+            </div>        
+        </td>
+      </tr>
+      <tr>
+        <td>
+          User:
+        </td>
+        <td>
+          <input type="text" id="tskUser" name="tskUser" disabled="disabled" style="width:50%" [(ngModel)]="userName" />
+          &nbsp;&nbsp;
+          <button type="button" id="btnUserSrch" class="btn btn-primary" [disabled]="isPrntTskChckd" data-toggle="modal" data-target="#exampleModal"
+            (click)="onUserSearchClick();" style="border-radius:50%">Search</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td>
+          <div style="width:60%;text-align:right">
+            <button type="button" id="btnAddTask" [disabled]="(!f.valid || !this.dateIsValid)" (click)="addTask();" class="btn btn-primary">{{buttonText}}</button>
+            &nbsp;&nbsp;
+            <button type="button" id="btnResTask" (click)="f.resetForm();"  class="btn btn-secondary">Reset</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{searchTitle}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:500px;overflow-y:auto;">
+        <div class="container-fluid">
+          <div class="row">
+            <input type="text" class="form-control" placeholder="Search..." name="txtUsrSrch" id="txtUsrSrch">
+          </div>
+          <div class="row justify-content-center mt-3" *ngFor="let obj of lstItem">
+            <input class="col-md-3" type="radio" name="rdlstItem" id="rdlstItem" (change)="handleChange(obj.Type);">
+            <span class="col-md-9" name="lbllstItem" id="lbllstItem">{{obj.Name}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSelection();">Select</button>
+      </div>
+    </div>
+  </div>
+</div>

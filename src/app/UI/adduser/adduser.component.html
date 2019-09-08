@@ -1,0 +1,104 @@
+
+<div class="container">
+  <form #f="ngForm">
+  <table class="table">
+    <tr>
+      <td colspan="2">
+        <span> {{ResponseMsg}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="width:20%">
+        First Name:
+      </td>
+      <td style="width:60%">
+        <input type="text" id="usrFirstNm" style="width:500px;" name="usrFirstNm" #firstName="ngModel" [(ngModel)]="usrObj.FirstName"  required/>
+        <div style="float:right;width:35%;padding:initial;margin:initial" class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">First
+            Name is required</div>
+          <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="width:20%">
+        Last Name:
+      </td>
+      <td style="width:60%">
+        <input type="text" id="usrLastNm" style="width:500px;" name="usrLadtNm" #lastName="ngModel" [(ngModel)]="usrObj.LastName"  required />
+        <div style="float:right;width:35%;padding:initial;margin:initial" class="alert alert-danger" *ngIf="lastName.touched && !lastName.valid">Last
+            Name is required</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="width:20%">
+        Employee ID:        
+      </td>
+      <td>
+        <input type="text" id="usrEmpId" name="usrEmpId" #eId="ngModel" [(ngModel)]="usrObj.EmployeeId" style="width:150px;" required/>
+        <div style="float:right;width:35%;padding:initial;margin:initial" class="alert alert-danger" *ngIf="eId.touched && !eId.valid">Employee
+            ID is required</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <div style="width:60%;text-align:right">
+          <button type="button" id="btnAddUser" (click)="addUser();" [disabled]="!f.valid" class="btn btn-primary">{{buttonText}}</button>
+          &nbsp;&nbsp;
+          <button type="button" id="btnResUser" (click)="f.resetForm();" class="btn btn-secondary">Reset</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div style="width:92%;">
+          <input type="text" id="srchProject" style="width:25%" name="srchProject"  [(ngModel)]="searchText" placeholder="Search..." />
+          &nbsp;&nbsp;
+          <div style="width:55%;float:right">
+            Sort :
+            <button type="button" id="btnSortUsrFNm" (click)="SortByFN();" class="btn btn-primary">First Name</button> &nbsp;&nbsp;
+            <button type="button" id="btnSortUsrLNm" (click)="SortByLN();" class="btn btn-primary">Last Name</button> &nbsp;&nbsp;
+            <button type="button" id="btnSortUsrId"  (click)="SortByID();" class="btn btn-primary">Id</button> &nbsp;&nbsp;
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div style="width:74%">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let obj of lstUsers">
+              <div>
+                <table class="table">
+                  <tr>
+                    <td>
+                      <span id="usrFirstNm">{{obj.FirstName}}</span>
+                    </td>
+                    <td style="float: right">
+                      <button type="button" style="width:90px;" id="btnusrEdit" (click)="edit(obj);" class="btn btn-primary">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span id="usrLastNm">{{obj.LastName}}</span>
+                    </td>
+                    <td style="float: right">
+                      <button type="button" style="width:90px;" id="btnusrDel" (click)="delete(obj);" class="btn btn-danger">Delete</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span id="usrEmpId">{{obj.EmployeeId}}</span>
+                    </td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </table>
+</form>
+</div>
